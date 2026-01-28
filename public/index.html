@@ -2,49 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CloudFroge 🐸</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <header class="navbar">
-    <div class="logo">🐸 CloudFroge</div>
-    <nav>
-      <a href="#features">Features</a>
-      <a href="#chat">Chat</a>
-      <a href="#deploy">Deploy</a>
-    </nav>
-  </header>
+  <div class="background"></div>
 
-  <section class="hero">
-    <h1>CloudFroge</h1>
-    <p>Cloud-deployed AI assistant powered by Gemini & OpenAI</p>
-    <button onclick="scrollToChat()">Start Chatting</button>
-  </section>
+  <main class="glass-card">
+    <h1>🐸 CloudFroge</h1>
+    <p class="tagline">
+      Cloud-native AI assistant powered by Gemini & OpenAI
+    </p>
 
-  <section id="features" class="features">
-    <h2>🔥 Features</h2>
-    <div class="grid">
-      <div class="card">⚡ Node.js + Express Backend</div>
-      <div class="card">☁️ Render Cloud Deployment</div>
-      <div class="card">🧠 Gemini + OpenAI AI Brain</div>
-      <div class="card">🔐 Secure API Handling</div>
-      <div class="card">📱 Mobile Responsive UI</div>
-      <div class="card">💼 Resume-Ready Project</div>
+    <div class="chat-box">
+      <input id="message" placeholder="Ask CloudFroge something..." />
+      <button onclick="sendMessage()">Send</button>
     </div>
-  </section>
 
-  <section id="chat" class="chat">
-    <h2>💬 Try CloudFroge</h2>
-    <input id="message" placeholder="Ask something..." />
-    <button onclick="sendMessage()">Send</button>
     <pre id="response"></pre>
-  </section>
 
-  <footer>
-    <p>© 2026 CloudFroge • Built by Anurag 🐸</p>
-  </footer>
+    <footer>
+      Built by <strong>AairaGalaxyStudio</strong>
+    </footer>
+  </main>
 
   <script src="app.js"></script>
 </body>
