@@ -1,4 +1,4 @@
-{
+npm install @google/generative-ai{
   "name": "cloudfroge",
   "version": "1.0.0",
   "type": "module",
