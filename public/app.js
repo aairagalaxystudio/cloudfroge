@@ -1,19 +1,23 @@
 async function sendMessage() {
-  const message = document.getElementById("message").value;
+  const input = document.getElementById("message");
   const responseBox = document.getElementById("response");
 
-  responseBox.textContent = "Thinking... 🐸";
+  if (!input.value) return;
 
-  const res = await fetch("/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message })
-  });
+  responseBox.textContent = "🐸 Thinking...";
 
-  const data = await res.json();
-  responseBox.textContent = data.reply;
-}
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: input.value })
+    });
 
-function scrollToChat() {
-  document.getElementById("chat").scrollIntoView({ behavior: "smooth" });
+    const data = await res.json();
+    responseBox.textContent = data.reply;
+  } catch (err) {
+    responseBox.textContent = "❌ Error talking to CloudFroge";
+  }
+
+  input.value = "";
 }
