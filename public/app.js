@@ -1,15 +1,7 @@
-async function send() {
-  const msg = document.getElementById("msg").value;
-  const replyBox = document.getElementById("reply");
+const provider = document.getElementById("provider").value;
 
-  replyBox.textContent = "🐸 Thinking...";
-
-  const res = await fetch("/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: msg })
-  });
-
-  const data = await res.json();
-  replyBox.textContent = data.reply;
-}
+fetch("/chat", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ message, provider })
+});
