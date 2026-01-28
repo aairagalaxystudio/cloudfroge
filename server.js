@@ -1,33 +1,29 @@
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
+const PORT = process.env.PORT || 10000;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 
-// Home route (Render health check)
-app.get("/", (req, res) => {
-  res.send("🐸 CloudFroge is alive and coding!");
+app.get("/health", (req, res) => {
+  res.json({ status: "CloudFroge is healthy 🐸" });
 });
 
-// Chat API
 app.post("/chat", (req, res) => {
-  const { message } = req.body || {};
-
-  let reply = "🐸 CloudFroge here! Ask me coding questions.";
-
-  if (message && message.startsWith("/code")) {
-    reply = "👨‍💻 Tell me language + task (example: /code python api)";
-  } else if (message && message.startsWith("/debug")) {
-    reply = "🐞 Paste your error and code, I’ll help you debug.";
-  } else if (message && message.startsWith("/build")) {
-    reply = "🏗️ What do you want to build? (web/app/api)";
-  }
-
-  res.json({ reply });
+  const { message } = req.body;
+  res.json({ reply: `🐸 CloudFroge received: "${message}"` });
 });
 
-// IMPORTANT: Render PORT
-const PORT = process.env.PORT || 3000;
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 app.listen(PORT, () => {
-  console.log(`CloudFroge running on port ${PORT}`);
+  console.log(`🐸 CloudFroge running on port ${PORT}`);
 });
