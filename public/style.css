@@ -1,95 +1,91 @@
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
-  font-family: system-ui, sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
 }
 
 body {
+  margin: 0;
+  height: 100vh;
   background: #0f172a;
-  color: #e5e7eb;
+  overflow: hidden;
+  color: white;
 }
 
-.navbar {
+/* animated gradient background */
+.background {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, #6366f1, #22d3ee, #a855f7);
+  animation: gradient 10s ease infinite;
+  filter: blur(80px);
+}
+
+@keyframes gradient {
+  0% { transform: scale(1) translateX(0); }
+  50% { transform: scale(1.2) translateX(-50px); }
+  100% { transform: scale(1) translateX(0); }
+}
+
+.glass-card {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 480px;
+  margin: auto;
+  margin-top: 10vh;
+  padding: 2rem;
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  text-align: center;
+  animation: fadeUp 1s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tagline {
+  opacity: 0.85;
+  margin-bottom: 1.5rem;
+}
+
+.chat-box {
   display: flex;
-  justify-content: space-between;
-  padding: 16px 32px;
-  background: #020617;
+  gap: 0.5rem;
 }
 
-.navbar a {
-  color: #94a3b8;
-  margin-left: 20px;
-  text-decoration: none;
-}
-
-.logo {
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.hero {
-  text-align: center;
-  padding: 80px 20px;
-}
-
-.hero h1 {
-  font-size: 48px;
-  margin-bottom: 10px;
-}
-
-.hero button {
-  margin-top: 20px;
-  padding: 12px 24px;
+input {
+  flex: 1;
+  padding: 0.7rem;
+  border-radius: 10px;
   border: none;
-  background: #22c55e;
-  color: black;
-  border-radius: 8px;
+  outline: none;
+}
+
+button {
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  border: none;
+  background: #22d3ee;
   cursor: pointer;
+  font-weight: bold;
 }
 
-.features {
-  padding: 60px 20px;
-  text-align: center;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-top: 30px;
-}
-
-.card {
-  background: #020617;
-  padding: 20px;
-  border-radius: 12px;
-}
-
-.chat {
-  padding: 60px 20px;
-  text-align: center;
-}
-
-.chat input {
-  padding: 10px;
-  width: 60%;
-  max-width: 400px;
-}
-
-.chat button {
-  margin-left: 10px;
-  padding: 10px 16px;
+button:hover {
+  background: #38bdf8;
 }
 
 pre {
-  margin-top: 20px;
+  text-align: left;
+  margin-top: 1rem;
   white-space: pre-wrap;
 }
 
 footer {
-  text-align: center;
-  padding: 20px;
-  background: #020617;
-  margin-top: 40px;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  opacity: 0.8;
 }
