@@ -1,17 +1,15 @@
 {
   "name": "cloudfroge",
   "version": "1.0.0",
-{npm install @google/generative-ai
+  "description": "Cloud-native Multi-AI Assistant (Gemini + OpenAI)",
   "type": "module",
-}npm install openai
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "engines": {
-    "node": ">=18"
-  },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.18.2",
+    "@google/generative-ai": "^0.7.0",
+    "openai": "^4.0.0"
   }
 }
