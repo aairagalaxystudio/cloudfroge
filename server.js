@@ -1,13 +1,17 @@
 app.post("/chat", async (req, res) => {
   const { message, provider } = req.body;
 
+  let reply = "";
+
   if (provider === "gemini") {
-    // Gemini SDK
+    reply = `🐸 Gemini says: ${message}`;
+  } 
+  else if (provider === "openai") {
+    reply = `🤖 OpenAI says: ${message}`;
+  } 
+  else {
+    reply = "Unknown provider";
   }
 
-  if (provider === "openai") {
-    // OpenAI SDK
-  }
-
-  res.json({ reply });
+  res.json({ reply }); // ✅ MUST be reply
 });
