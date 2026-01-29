@@ -1,38 +1,44 @@
-const input = document.getElementById("user-input");
-const sendBtn = document.getElementById("send-btn");
 const chat = document.getElementById("chat");
+const input = document.getElementById("input");
+const send = document.getElementById("send");
+
+const USER_KEY = "demo-user-key"; // replace later
+
+send.onclick = () => {
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  addBubble(msg, "user");
+  input.value = "";
+
+  const bubble = addBubble("", "bot");
+  bubble.innerHTML = "▍";
+
+  const evt = new EventSource(
+    `/api/stream?message=${encodeURIComponent(msg)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${USER_KEY}`
+      }
+    }
+  );
+
+  evt.onmessage = e => {
+    bubble.innerHTML =
+      bubble.innerHTML.replace("▍", "") + e.data + "▍";
+  };
+
+  evt.addEventListener("done", () => {
+    bubble.innerHTML = bubble.innerHTML.replace("▍", "");
+    evt.close();
+  });
+};
 
 function addBubble(text, type) {
   const div = document.createElement("div");
-  div.className = `bubble ${type}`;
-  div.innerText = text;
+  div.className = "bubble " + type;
+  div.textContent = text;
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
-}
-
-sendBtn.addEventListener("click", sendMessage);
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter") sendMessage();
-});
-
-async function sendMessage() {
-  const message = input.value.trim();
-  if (!message) return;
-
-  addBubble(message, "user");
-  input.value = "";
-
-  try {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message })
-    });
-
-    const data = await res.json();
-    addBubble(data.reply, "bot");
-
-  } catch (err) {
-    addBubble("❌ Server error.", "bot");
-  }
+  return div;
 }
