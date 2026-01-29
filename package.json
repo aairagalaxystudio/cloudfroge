@@ -1,9 +1,9 @@
 {
   "name": "cloudfroge",
   "version": "1.0.0",
-  "type": "module",
-  "description": "Cloud-native Multi-AI Assistant",
+  "description": "CloudFroge - Cloud-native Multi-AI Assistant",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js"
   },
@@ -11,9 +11,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.17.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "openai": "^4.28.0"
   }
 }
