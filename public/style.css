@@ -1,68 +1,177 @@
-* { box-sizing: border-box; font-family: system-ui; }
-
-body {
+/* -------- RESET -------- */
+* {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* -------- PAGE -------- */
+body {
   min-height: 100vh;
-  background: linear-gradient(135deg, #00b4ff, #0077ff);
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  color: #fff;
 }
 
-.container {
-  width: 95%;
+/* -------- CARD -------- */
+.card {
+  width: 94%;
   max-width: 420px;
-  background: rgba(255,255,255,0.18);
-  backdrop-filter: blur(20px);
-  border-radius: 22px;
-  padding: 22px;
-  color: white;
-  box-shadow: 0 0 60px rgba(0,255,255,0.4);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 0 60px rgba(0, 255, 255, 0.35);
+  animation: fadeIn 0.6s ease;
 }
 
-.logo { font-size: 42px; text-align: center; }
+/* -------- LOGO -------- */
+.logo-wrap {
+  position: relative;
+  height: 56px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
 
-h1, p { text-align: center; }
+.frog {
+  position: absolute;
+  font-size: 40px;
+  animation: frog-walk 3.5s ease-in-out infinite;
+}
 
-select, input, button {
+/* Frog left → right → left */
+@keyframes frog-walk {
+  0% {
+    left: 0%;
+    transform: scaleX(1);
+  }
+  50% {
+    left: calc(100% - 40px);
+    transform: scaleX(1);
+  }
+  51% {
+    transform: scaleX(-1);
+  }
+  100% {
+    left: 0%;
+    transform: scaleX(-1);
+  }
+}
+
+/* -------- TEXT -------- */
+h1 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 16px;
+}
+
+/* -------- INPUTS -------- */
+select,
+input,
+button {
   width: 100%;
-  margin-top: 12px;
   padding: 14px;
-  border-radius: 14px;
+  border-radius: 16px;
   border: none;
   font-size: 16px;
+  margin-top: 12px;
+  outline: none;
 }
 
+select {
+  background: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+input {
+  background: #fff;
+}
+
+/* -------- BUTTON -------- */
 button {
   background: linear-gradient(135deg, #00ffb3, #00d4ff);
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 255, 200, 0.45);
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+/* -------- CHAT -------- */
 #chat {
   margin-top: 16px;
-  max-height: 280px;
+  max-height: 260px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scroll-behavior: smooth;
 }
 
+/* -------- BUBBLES -------- */
 .bubble {
   padding: 12px 16px;
-  border-radius: 16px;
-  margin: 8px 0;
-  animation: pop 0.25s ease;
+  border-radius: 18px;
+  max-width: 82%;
+  animation: bubbleIn 0.3s ease;
 }
 
 .user {
+  align-self: flex-end;
   background: #00ffb3;
   color: #003333;
-  align-self: flex-end;
 }
 
 .bot {
-  background: rgba(255,255,255,0.2);
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
 }
 
-@keyframes pop {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; }
+/* -------- ANIMATIONS -------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bubbleIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* -------- MOBILE -------- */
+@media (max-width: 420px) {
+  h1 {
+    font-size: 28px;
+  }
 }
