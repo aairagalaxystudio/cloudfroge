@@ -1,4 +1,48 @@
-.response {
+#chat {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bubble {
+  padding: 14px 18px;
+  border-radius: 18px;
+  max-width: 80%;
+  animation: fadeIn 0.3s ease;
+}
+
+.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #00f2fe, #4facfe);
+  color: #000;
+}
+
+.bot {
+  align-self: flex-start;
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(12px);
+  color: #fff;
+}
+
+.cursor {
+  display: inline-block;
+  width: 6px;
+  height: 18px;
+  background: #00ffcc;
+  margin-left: 4px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,50%,100% { opacity: 1 }
+  25%,75% { opacity: 0 }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}.response {
   max-height: 260px;
   overflow-y: auto;
   margin-top: 16px;
