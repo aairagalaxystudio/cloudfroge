@@ -1,94 +1,80 @@
 import express from "express";
-import fetch from "node-fetch";
+import cors from "cors";
 import dotenv from "dotenv";
+import rateLimit from "express-rate-limit";
+import OpenAI from "openai";
 
 dotenv.config();
-const app = express();
 
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+/* ---------- MIDDLEWARE ---------- */
+app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-/* ------------------ CONFIG ------------------ */
-const RATE_LIMIT = 30; // requests per minute
-const MEMORY_LIMIT = 10;
+/* ---------- RATE LIMIT ---------- */
+app.use("/chat", rateLimit({
+  windowMs: 60 * 1000,
+  max: 20
+}));
 
-/* In-memory stores (swap to Redis later) */
-const rateStore = {};
-const memoryStore = {};
-
-/* ------------------ HELPERS ------------------ */
-function checkRateLimit(key) {
-  const now = Date.now();
-  rateStore[key] = rateStore[key] || [];
-  rateStore[key] = rateStore[key].filter(t => now - t < 60000);
-  if (rateStore[key].length >= RATE_LIMIT) return false;
-  rateStore[key].push(now);
-  return true;
-}
-
-/* ------------------ STREAM CHAT ------------------ */
-app.get("/api/stream", async (req, res) => {
-  const userKey = req.headers.authorization?.replace("Bearer ", "");
-  const prompt = req.query.message;
-
-  if (!userKey) return res.status(401).end();
-  if (!checkRateLimit(userKey)) return res.status(429).end();
-
-  memoryStore[userKey] = memoryStore[userKey] || [];
-  memoryStore[userKey].push({ role: "user", content: prompt });
-  memoryStore[userKey] = memoryStore[userKey].slice(-MEMORY_LIMIT);
-
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache");
-  res.flushHeaders();
-
-  const openaiRes = await fetch(
-    "https://api.openai.com/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        stream: true,
-        messages: memoryStore[userKey]
-      })
-    }
-  );
-
-  let assistantText = "";
-
-  openaiRes.body.on("data", chunk => {
-    const lines = chunk.toString().split("\n");
-    for (const line of lines) {
-      if (!line.startsWith("data:")) continue;
-      if (line.includes("[DONE]")) {
-        memoryStore[userKey].push({
-          role: "assistant",
-          content: assistantText
-        });
-        res.write("event: done\ndata: end\n\n");
-        res.end();
-        return;
-      }
-
-      try {
-        const json = JSON.parse(line.replace("data: ", ""));
-        const token = json.choices[0].delta?.content;
-        if (token) {
-          assistantText += token;
-          res.write(`data: ${token}\n\n`);
-        }
-      } catch {}
-    }
-  });
+/* ---------- OPENAI ---------- */
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
 
-/* ------------------ HEALTH ------------------ */
-app.get("/health", (_, res) => res.json({ ok: true }));
+/* ---------- MEMORY (IN-MEMORY MVP) ---------- */
+const memory = new Map();
 
-app.listen(process.env.PORT || 3000, () =>
-  console.log("🐸 CloudFrog streaming server live")
+/* ---------- HEALTH ---------- */
+app.get("/health", (req, res) => {
+  res.json({ status: "ok 🐸" });
+});
+
+/* ---------- CHAT (STREAMING) ---------- */
+app.post("/chat", async (req, res) => {
+  try {
+    const { message, sessionId = "default" } = req.body;
+    if (!message) return res.status(400).end();
+
+    const history = memory.get(sessionId) || [];
+    history.push({ role: "user", content: message });
+
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+
+    const stream = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: history,
+      stream: true
+    });
+
+    let fullReply = "";
+
+    for await (const chunk of stream) {
+      const token = chunk.choices[0]?.delta?.content;
+      if (token) {
+        fullReply += token;
+        res.write(`data: ${token}\n\n`);
+      }
+    }
+
+    history.push({ role: "assistant", content: fullReply });
+    memory.set(sessionId, history.slice(-10)); // keep last 10
+
+    res.write("data: [DONE]\n\n");
+    res.end();
+
+  } catch (err) {
+    console.error(err);
+    res.write(`data: ❌ OpenAI API error.\n\n`);
+    res.end();
+  }
+});
+
+app.listen(PORT, () =>
+  console.log(`🐸 CloudFrog running on ${PORT}`)
 );
