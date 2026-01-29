@@ -2,43 +2,49 @@ const chat = document.getElementById("chat");
 const input = document.getElementById("input");
 const send = document.getElementById("send");
 
-const USER_KEY = "demo-user-key"; // replace later
+const sessionId = crypto.randomUUID();
 
-send.onclick = () => {
-  const msg = input.value.trim();
-  if (!msg) return;
-
-  addBubble(msg, "user");
-  input.value = "";
-
-  const bubble = addBubble("", "bot");
-  bubble.innerHTML = "▍";
-
-  const evt = new EventSource(
-    `/api/stream?message=${encodeURIComponent(msg)}`,
-    {
-      headers: {
-        Authorization: `Bearer ${USER_KEY}`
-      }
-    }
-  );
-
-  evt.onmessage = e => {
-    bubble.innerHTML =
-      bubble.innerHTML.replace("▍", "") + e.data + "▍";
-  };
-
-  evt.addEventListener("done", () => {
-    bubble.innerHTML = bubble.innerHTML.replace("▍", "");
-    evt.close();
-  });
-};
-
-function addBubble(text, type) {
+function bubble(text, cls) {
   const div = document.createElement("div");
-  div.className = "bubble " + type;
+  div.className = `bubble ${cls}`;
   div.textContent = text;
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
   return div;
 }
+
+send.onclick = async () => {
+  if (!input.value.trim()) return;
+
+  bubble(input.value, "user");
+  const bot = bubble("▍", "bot");
+
+  const res = await fetch("/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: input.value,
+      sessionId
+    })
+  });
+
+  input.value = "";
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+
+  let text = "";
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+
+    const chunk = decoder.decode(value);
+    if (chunk.includes("[DONE]")) break;
+
+    text += chunk.replace(/^data:\s*/gm, "");
+    bot.textContent = text + "▍";
+  }
+
+  bot.textContent = text;
+};
