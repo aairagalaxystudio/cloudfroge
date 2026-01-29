@@ -12,7 +12,7 @@ function addBubble(text, type = "bot") {
 }
 
 sendBtn.addEventListener("click", sendMessage);
-input.addEventListener("keypress", e => {
+input.addEventListener("keypress", (e) => {
   if (e.key === "Enter") sendMessage();
 });
 
@@ -26,11 +26,12 @@ async function sendMessage() {
   addBubble(message, "user");
   input.value = "";
 
-  // Typing indicator
+  // Typing bubble
   const typingBubble = document.createElement("div");
-  typingBubble.className = "bubble bot";
-  typingBubble.innerText = "Gemini is typing…";
+  typingBubble.className = "bubble bot typing";
+  typingBubble.innerText = "CloudFroge is thinking...";
   chatBox.appendChild(typingBubble);
+  chatBox.scrollTop = chatBox.scrollHeight;
 
   try {
     const res = await fetch("/chat", {
@@ -40,11 +41,14 @@ async function sendMessage() {
     });
 
     const data = await res.json();
+
     typingBubble.remove();
 
-    addBubble(data.reply || "⚠️ No reply from server", "bot");
+    // Gemini reply bubble
+    addBubble(data.reply || "⚠️ No reply from AI", "bot");
+
   } catch (err) {
     typingBubble.remove();
-    addBubble("❌ Server error", "bot");
+    addBubble("❌ Server error. Check backend.", "bot");
   }
 }
