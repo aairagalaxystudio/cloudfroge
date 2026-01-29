@@ -1,15 +1,15 @@
 # 🐸 CloudFrog
 
-Cloud-native Multi-AI Assistant.
+Cloud-native Multi-AI Assistant with streaming, memory, auth & rate limits.
 
 ## Features
-- OpenAI backend (stable)
-- Mobile-friendly UI
-- Ready for Gemini integration
-- Render deployment supported
+- ⚡ Real-time streaming responses
+- 🧠 Per-user chat memory
+- 🔐 API-key based auth
+- 🚦 Rate limiting
+- 🔄 OpenAI now, Gemini-ready
 
-## Setup
-
+## Run locally
 ```bash
 npm install
 npm start
