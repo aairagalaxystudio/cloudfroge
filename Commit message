@@ -1,10 +1,6 @@
-feat: switch CloudFroge AI engine to Google Gemini
-feat: replace chat with real multi-AI streaming (Gemini + OpenAI)
-
-- Fixed /chat POST endpoint
-- Added real Gemini streaming responses
-- Added real OpenAI streaming responses
-- Implemented provider selector (Gemini | OpenAI)
-- Added typing cursor animation
-- Added chat history bubbles
-- Improved frontend streaming handling
+feat: OpenAI live chat + Gemini setup ready (toggleable)
+OpenAI fully integrated and live
+Gemini SDK installed and environment ready
+Provider selector wired
+Clean /chat API
+Portfolio-ready structure
