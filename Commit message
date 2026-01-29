@@ -1,6 +1,5 @@
-feat: switch backend to OpenAI (Gemini temporarily disabled)
+feat: finalize frontend chat logic and project documentation
 
-- Activate OpenAI chat completion backend
-- Keep Gemini UI selector (coming soon)
-- Stable /chat endpoint for production
-- Render-ready configuration
+- Add production-ready app.js with chat bubbles
+- Improve error handling and provider support
+- Add professional README for portfolio use
