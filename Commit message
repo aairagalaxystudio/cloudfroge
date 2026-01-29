@@ -1,1 +1,2 @@
+"fix: upgrade Gemini SDK and stabilize server runtime"
 "feat(ui): implement chat bubble interface with Gemini response rendering"
