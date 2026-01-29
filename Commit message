@@ -1,6 +1,9 @@
-feat: all-in-one streaming AI chat
+feat: replace chat with real multi-AI streaming (Gemini + OpenAI)
 
-- Gemini streaming (chunked)
-- OpenAI true token streaming
-- Blinking typing cursor
-- Chat history bubbles
+- Fixed /chat POST endpoint
+- Added real Gemini streaming responses
+- Added real OpenAI streaming responses
+- Implemented provider selector (Gemini | OpenAI)
+- Added typing cursor animation
+- Added chat history bubbles
+- Improved frontend streaming handling
