@@ -1,7 +1,20 @@
-const form = document.getElementById("chat-form");
-const input = document.getElementById("prompt");
-const chatBox = document.getElementById("chat-box");
+// public/app.js
 
+const form = document.getElementById("chat-form");
+const input = document.getElementById("user-input");
+const chatBox = document.getElementById("chat-box");
+const providerSelect = document.getElementById("provider");
+
+// Add message bubble
+function addMessage(text, type = "bot") {
+  const bubble = document.createElement("div");
+  bubble.className = `bubble ${type}`;
+  bubble.textContent = text;
+  chatBox.appendChild(bubble);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Handle submit
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -12,40 +25,28 @@ form.addEventListener("submit", async (e) => {
   addMessage(message, "user");
   input.value = "";
 
-  // Typing placeholder
-  const typingBubble = addMessage("Typing...", "bot");
-
   try {
-    // 🔒 FORCE OPENAI (temporary)
-    const response = await fetch("/api/chat", {
+    const res = await fetch("/api/chat", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
-        provider: "openai",
-        message
-      })
+        provider: providerSelect.value, // currently OpenAI
+        message,
+      }),
     });
 
-    const data = await response.json();
-
-    typingBubble.remove();
-
-    if (data.reply) {
-      addMessage(data.reply, "bot");
-    } else {
-      addMessage("⚠️ No response from AI.", "bot");
+    if (!res.ok) {
+      throw new Error("Server error");
     }
+
+    const data = await res.json();
+
+    addMessage(data.reply || "⚠️ Empty response", "bot");
+
   } catch (err) {
-    typingBubble.remove();
+    console.error(err);
     addMessage("❌ Server error. Check backend logs.", "bot");
   }
 });
-
-function addMessage(text, type) {
-  const bubble = document.createElement("div");
-  bubble.className = `bubble ${type}`;
-  bubble.innerText = text;
-  chatBox.appendChild(bubble);
-  chatBox.scrollTop = chatBox.scrollHeight;
-  return bubble;
-}
