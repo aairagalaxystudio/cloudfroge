@@ -1,55 +1,68 @@
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 import OpenAI from "openai";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-/* ---------- MIDDLEWARE ---------- */
+// ===== Fix __dirname for ES modules =====
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ===== Middleware =====
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
-/* ---------- OPENAI SETUP ---------- */
+// ===== OpenAI Setup =====
+if (!process.env.OPENAI_API_KEY) {
+  console.error("❌ OPENAI_API_KEY missing");
+}
+
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
-/* ---------- HEALTH CHECK ---------- */
+// ===== Health Check =====
 app.get("/health", (req, res) => {
-  res.json({ status: "ok", provider: "openai" });
+  res.json({ status: "CloudFrog backend healthy 🐸" });
 });
 
-/* ---------- CHAT ENDPOINT ---------- */
-app.post("/chat", async (req, res) => {
-  const { message, provider } = req.body;
-
-  // Gemini temporarily disabled
-  if (provider === "gemini") {
-    return res.json({
-      reply: "🐸 Gemini coming soon. Using OpenAI for now."
-    });
-  }
-
+// ===== Chat API =====
+app.post("/api/chat", async (req, res) => {
   try {
+    const { message } = req.body;
+
+    if (!message) {
+      return res.status(400).json({ reply: "Message is required" });
+    }
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "You are CloudFroge, a friendly AI assistant." },
+        { role: "system", content: "You are CloudFrog, a friendly AI assistant." },
         { role: "user", content: message }
-      ]
+      ],
     });
 
     res.json({
-      reply: completion.choices[0].message.content
+      reply: completion.choices[0].message.content,
     });
-  } catch (err) {
-    console.error(err);
+
+  } catch (error) {
+    console.error("❌ OpenAI Error:", error.message);
     res.status(500).json({
-      reply: "🐸 OpenAI error. Check API key or quota."
+      reply: "❌ Server error. Check backend logs."
     });
   }
 });
 
-/* ---------- START SERVER ---------- */
+// ===== Serve Frontend =====
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// ===== Start Server =====
 app.listen(PORT, () => {
-  console.log(`🐸 CloudFroge running on port ${PORT}`);
+  console.log(`🐸 CloudFrog running on port ${PORT}`);
 });
