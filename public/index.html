@@ -2,52 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CloudFroge</title>
-
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Styles -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CloudFrog</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <main class="app">
+  <div class="app-container">
 
-    <!-- Card -->
-    <section class="card">
-      <!-- Logo -->
-      <div class="logo">
-        🐸
-      </div>
-
-      <h1>CloudFroge</h1>
+    <div class="card">
+      <div class="logo">🐸</div>
+      <h1>CloudFrog</h1>
       <p class="subtitle">Cloud-native Multi-AI Assistant</p>
 
-      <!-- Provider -->
-      <select id="provider">
-        <option value="gemini">Gemini</option>
-        <option value="openai" disabled>OpenAI (soon)</option>
+      <!-- Provider (UI only) -->
+      <select id="provider" disabled>
+        <option value="openai" selected>OpenAI</option>
+        <option value="gemini">Gemini (Coming Soon)</option>
       </select>
 
-      <!-- Input -->
-      <input
-        id="messageInput"
-        type="text"
-        placeholder="Ask CloudFroge..."
-        autocomplete="off"
-      />
-
-      <!-- Send -->
-      <button id="sendBtn">Send</button>
-
       <!-- Chat -->
-      <div id="chatBox"></div>
-    </section>
+      <div id="chat-box" class="chat-box"></div>
 
-  </main>
+      <!-- Input -->
+      <form id="chat-form">
+        <input
+          id="prompt"
+          type="text"
+          placeholder="Ask CloudFrog..."
+          autocomplete="off"
+        />
+        <button type="submit">Send</button>
+      </form>
+    </div>
 
-  <!-- Script -->
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>
