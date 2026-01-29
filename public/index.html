@@ -2,30 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CloudFroge</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="bg"></div>
+  <main class="app">
 
-  <div class="card">
-    <div class="logo">🐸</div>
-    <h1>CloudFroge</h1>
-    <p class="tagline">Cloud-native Multi-AI Assistant</p>
+    <!-- Card -->
+    <section class="card">
+      <!-- Logo -->
+      <div class="logo">
+        🐸
+      </div>
 
-    <select id="provider">
-      <option value="gemini">Gemini</option>
-      <option value="openai" disabled>OpenAI (soon)</option>
-    </select>
+      <h1>CloudFroge</h1>
+      <p class="subtitle">Cloud-native Multi-AI Assistant</p>
 
-    <input id="prompt" type="text" placeholder="Ask CloudFroge..." />
+      <!-- Provider -->
+      <select id="provider">
+        <option value="gemini">Gemini</option>
+        <option value="openai" disabled>OpenAI (soon)</option>
+      </select>
 
-    <button id="sendBtn">Send</button>
+      <!-- Input -->
+      <input
+        id="messageInput"
+        type="text"
+        placeholder="Ask CloudFroge..."
+        autocomplete="off"
+      />
 
-    <div id="response" class="response"></div>
-  </div>
+      <!-- Send -->
+      <button id="sendBtn">Send</button>
 
+      <!-- Chat -->
+      <div id="chatBox"></div>
+    </section>
+
+  </main>
+
+  <!-- Script -->
   <script src="app.js"></script>
 </body>
 </html>
