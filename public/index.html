@@ -3,51 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <title>CloudFrog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-  <div class="page">
-    <div class="card glass">
 
-      <!-- Logo -->
-      <div class="logo">🐸</div>
+  <div class="container">
+    <h1>🐸 CloudFrog</h1>
+    <p>Cloud-native Multi-AI Assistant</p>
 
-      <!-- Title -->
-      <h1>CloudFrog</h1>
-      <p class="subtitle">Cloud-native Multi-AI Assistant</p>
+    <select id="provider">
+      <option value="openai">OpenAI</option>
+    </select>
 
-      <!-- Chat Form -->
-      <form id="chat-form">
+    <input
+      id="user-input"
+      type="text"
+      placeholder="Ask CloudFrog..."
+      autocomplete="off"
+    />
 
-        <!-- Provider (OpenAI for now) -->
-        <select id="provider">
-          <option value="openai">OpenAI</option>
-        </select>
+    <button id="send-btn">Send</button>
 
-        <!-- User Input -->
-        <input
-          id="user-input"
-          type="text"
-          placeholder="Ask CloudFrog..."
-          autocomplete="off"
-          required
-        />
-
-        <!-- Send Button -->
-        <button type="submit">Send</button>
-      </form>
-
-      <!-- Chat Area -->
-      <div id="chat-box" class="chat-box"></div>
-
-    </div>
+    <div id="chat"></div>
   </div>
 
-  <!-- JS -->
   <script src="app.js"></script>
 </body>
 </html>
