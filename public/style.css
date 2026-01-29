@@ -17,12 +17,16 @@
 }
 
 body {
+  body {
   margin: 0;
-  height: 100vh;
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  min-height: 100vh;
+  background: var(--bg-main);
+  font-family: "Inter", system-ui, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--text-main);
+  transition: background 0.3s ease;
 }
 
 .container {
