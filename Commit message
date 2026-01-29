@@ -1,3 +1,4 @@
+feat: switch CloudFroge AI engine to Google Gemini
 feat: replace chat with real multi-AI streaming (Gemini + OpenAI)
 
 - Fixed /chat POST endpoint
