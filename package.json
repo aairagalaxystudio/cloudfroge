@@ -1,14 +1,11 @@
 {
   "name": "cloudfrog",
-  "version": "1.0.0",
-  "description": "Cloud-native Multi-AI Assistant",
   "type": "module",
-  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.0",
     "express": "^4.19.2",
     "node-fetch": "^3.3.2"
   }
