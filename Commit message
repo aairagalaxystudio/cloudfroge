@@ -1,1 +1,6 @@
-fix(server): restore express app initialization
+feat: all-in-one streaming AI chat
+
+- Gemini streaming (chunked)
+- OpenAI true token streaming
+- Blinking typing cursor
+- Chat history bubbles
