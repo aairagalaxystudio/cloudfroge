@@ -1,52 +1,38 @@
-// public/app.js
-
-const form = document.getElementById("chat-form");
 const input = document.getElementById("user-input");
-const chatBox = document.getElementById("chat-box");
-const providerSelect = document.getElementById("provider");
+const sendBtn = document.getElementById("send-btn");
+const chat = document.getElementById("chat");
 
-// Add message bubble
-function addMessage(text, type = "bot") {
-  const bubble = document.createElement("div");
-  bubble.className = `bubble ${type}`;
-  bubble.textContent = text;
-  chatBox.appendChild(bubble);
-  chatBox.scrollTop = chatBox.scrollHeight;
+function addBubble(text, type) {
+  const div = document.createElement("div");
+  div.className = `bubble ${type}`;
+  div.innerText = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
 }
 
-// Handle submit
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+sendBtn.addEventListener("click", sendMessage);
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter") sendMessage();
+});
 
+async function sendMessage() {
   const message = input.value.trim();
   if (!message) return;
 
-  // User bubble
-  addMessage(message, "user");
+  addBubble(message, "user");
   input.value = "";
 
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        provider: providerSelect.value, // currently OpenAI
-        message,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message })
     });
 
-    if (!res.ok) {
-      throw new Error("Server error");
-    }
-
     const data = await res.json();
-
-    addMessage(data.reply || "⚠️ Empty response", "bot");
+    addBubble(data.reply, "bot");
 
   } catch (err) {
-    console.error(err);
-    addMessage("❌ Server error. Check backend logs.", "bot");
+    addBubble("❌ Server error.", "bot");
   }
-});
+}
