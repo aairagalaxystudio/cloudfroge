@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Fix __dirname for ES modules
+// Fix __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -19,79 +19,58 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-/* =========================
-   GEMINI SETUP (CORRECT)
-========================= */
-
-if (!process.env.GEMINI_API_KEY) {
-  console.error("❌ GEMINI_API_KEY missing");
-}
-
+// =======================
+// GEMINI SETUP (STABLE)
+// =======================
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-const geminiModel = genAI.getGenerativeModel({
+const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash"
 });
 
-/* =========================
-   HEALTH CHECK
-========================= */
+// =======================
+// HEALTH
+// =======================
 app.get("/health", (req, res) => {
-  res.json({ status: "🐸 CloudFroge healthy" });
+  res.json({ status: "ok 🐸" });
 });
 
-/* =========================
-   CHAT ENDPOINT
-========================= */
+// =======================
+// CHAT
+// =======================
 app.post("/chat", async (req, res) => {
   try {
     const { message, provider } = req.body;
 
     if (!message) {
-      return res.status(400).json({ reply: "❌ Message missing" });
+      return res.json({ reply: "❌ Empty message" });
     }
 
-    // Gemini (ACTIVE)
     if (provider === "gemini") {
-      const result = await geminiModel.generateContent({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: message }]
-          }
-        ]
-      });
+      // ✅ THIS is the correct call
+      const result = await model.generateContent(message);
+      const response = await result.response;
+      const text = response.text();
 
-      const reply =
-        result.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "⚠️ Gemini returned empty response";
-
-      return res.json({ reply });
+      return res.json({ reply: text });
     }
 
-    // OpenAI placeholder
-    return res.json({
-      reply: "🚧 OpenAI coming soon"
-    });
+    return res.json({ reply: "🚧 OpenAI coming soon" });
   } catch (err) {
-    console.error("🔥 Gemini Error:", err.message);
-
+    console.error("Gemini crash:", err);
     res.json({
       reply: "🐸 Gemini error. Model invocation failed."
     });
   }
 });
 
-/* =========================
-   FRONTEND FALLBACK
-========================= */
+// =======================
+// FRONTEND FALLBACK
+// =======================
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-/* =========================
-   START SERVER
-========================= */
+// =======================
 app.listen(PORT, () => {
-  console.log(`🐸 CloudFroge running on port ${PORT}`);
+  console.log(`🐸 CloudFroge running on ${PORT}`);
 });
