@@ -1,6 +1,1 @@
-feat: OpenAI live chat + Gemini setup ready (toggleable)
-OpenAI fully integrated and live
-Gemini SDK installed and environment ready
-Provider selector wired
-Clean /chat API
-Portfolio-ready structure
+"feat(ui): implement chat bubble interface with Gemini response rendering"
