@@ -1,15 +1,6 @@
 const form = document.getElementById("chat-form");
-const input = document.getElementById("message");
-const providerSelect = document.getElementById("provider");
+const input = document.getElementById("prompt");
 const chatBox = document.getElementById("chat-box");
-
-function addBubble(text, type = "bot") {
-  const bubble = document.createElement("div");
-  bubble.className = `bubble ${type}`;
-  bubble.innerText = text;
-  chatBox.appendChild(bubble);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -17,34 +8,44 @@ form.addEventListener("submit", async (e) => {
   const message = input.value.trim();
   if (!message) return;
 
-  const provider = providerSelect.value;
-
   // User bubble
-  addBubble(message, "user");
+  addMessage(message, "user");
   input.value = "";
 
-  // Temporary thinking bubble
-  const thinkingBubble = document.createElement("div");
-  thinkingBubble.className = "bubble bot";
-  thinkingBubble.innerText = "🐸 CloudFroge is thinking...";
-  chatBox.appendChild(thinkingBubble);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  // Typing placeholder
+  const typingBubble = addMessage("Typing...", "bot");
 
   try {
-    const res = await fetch("/chat", {
+    // 🔒 FORCE OPENAI (temporary)
+    const response = await fetch("/api/chat", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message, provider })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        provider: "openai",
+        message
+      })
     });
 
-    const data = await res.json();
-    thinkingBubble.remove();
+    const data = await response.json();
 
-    addBubble(data.reply || "🐸 No response", "bot");
+    typingBubble.remove();
+
+    if (data.reply) {
+      addMessage(data.reply, "bot");
+    } else {
+      addMessage("⚠️ No response from AI.", "bot");
+    }
   } catch (err) {
-    thinkingBubble.remove();
-    addBubble("🐸 Network error. Try again.", "bot");
+    typingBubble.remove();
+    addMessage("❌ Server error. Check backend logs.", "bot");
   }
 });
+
+function addMessage(text, type) {
+  const bubble = document.createElement("div");
+  bubble.className = `bubble ${type}`;
+  bubble.innerText = text;
+  chatBox.appendChild(bubble);
+  chatBox.scrollTop = chatBox.scrollHeight;
+  return bubble;
+}
