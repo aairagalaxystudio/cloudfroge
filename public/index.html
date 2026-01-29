@@ -1,10 +1,31 @@
-<select id="provider">
-  <option value="gemini">Gemini</option>
-  <option value="openai">OpenAI</option>
-</select>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CloudFroge</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg"></div>
 
-<input id="message" placeholder="Ask CloudFroge..." />
+  <div class="card">
+    <div class="logo">🐸</div>
+    <h1>CloudFroge</h1>
+    <p class="tagline">Cloud-native Multi-AI Assistant</p>
 
-<button onclick="sendMessage()">Send</button>
+    <select id="provider">
+      <option value="gemini">Gemini</option>
+      <option value="openai" disabled>OpenAI (soon)</option>
+    </select>
 
-<div id="output"></div>
+    <input id="prompt" type="text" placeholder="Ask CloudFroge..." />
+
+    <button id="sendBtn">Send</button>
+
+    <div id="response" class="response"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
