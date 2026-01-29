@@ -1,25 +1,37 @@
 # 🐸 CloudFroge
 
-Cloud-native Multi-AI Assistant built with Node.js and Express.
+**CloudFroge** is a cloud-native, modern **Multi-AI Assistant** built with Node.js, Express, and a clean glassmorphism UI.
 
-## Features
-- ✅ OpenAI Chat (LIVE)
-- 🧪 Gemini API (Ready – toggle anytime)
-- Modern glassmorphism UI
-- Provider selector (OpenAI / Gemini)
-- Deployed on Render
+Live Demo (Render):  
+👉 https://cloudfroge.onrender.com
 
-## Tech Stack
-- Node.js
-- Express
-- OpenAI API
-- Google Gemini API
-- Vanilla JS + CSS
+---
 
-## Live Demo
-https://cloudfroge.onrender.com
+## 🚀 Features
 
-## Run Locally
-```bash
-npm install
-npm start
+- 🤖 OpenAI-powered chat backend
+- 🧠 Multi-AI ready architecture (Gemini coming soon)
+- 💬 Chat bubble UI (user + assistant)
+- 🎨 Modern glassmorphism landing page
+- ☁️ Cloud-native deployment (Render)
+- 🔐 Secure API key handling via environment variables
+
+---
+
+## 🏗️ Tech Stack
+
+**Frontend**
+- HTML5
+- CSS3 (Glassmorphism UI)
+- Vanilla JavaScript
+
+**Backend**
+- Node.js (ES Modules)
+- Express.js
+- OpenAI SDK
+
+**Deployment**
+- GitHub
+- Render
+
+---
