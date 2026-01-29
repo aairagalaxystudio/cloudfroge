@@ -3,30 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <title>CloudFrog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <div class="container">
-    <h1>🐸 CloudFrog</h1>
-    <p>Cloud-native Multi-AI Assistant</p>
+<div class="container">
+  <div class="logo">🐸</div>
+  <h1>CloudFrog</h1>
+  <p>Cloud-native Multi-AI Assistant</p>
 
-    <select id="provider">
-      <option value="openai">OpenAI</option>
-    </select>
+  <select id="provider">
+    <option value="openai">OpenAI</option>
+    <option disabled>Gemini (soon)</option>
+  </select>
 
-    <input
-      id="user-input"
-      type="text"
-      placeholder="Ask CloudFrog..."
-      autocomplete="off"
-    />
+  <input id="input" placeholder="Ask CloudFrog..." />
+  <button id="send">Send</button>
 
-    <button id="send-btn">Send</button>
+  <div id="chat"></div>
+</div>
 
-    <div id="chat"></div>
-  </div>
-
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
