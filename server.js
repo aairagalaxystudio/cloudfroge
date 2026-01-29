@@ -1,76 +1,55 @@
 import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-dotenv.config();
+import OpenAI from "openai";
 
 const app = express();
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 3000;
 
-// Fix __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Middleware
-app.use(cors());
+/* ---------- MIDDLEWARE ---------- */
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("public"));
 
-// =======================
-// GEMINI SETUP (STABLE)
-// =======================
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash"
+/* ---------- OPENAI SETUP ---------- */
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
 
-// =======================
-// HEALTH
-// =======================
+/* ---------- HEALTH CHECK ---------- */
 app.get("/health", (req, res) => {
-  res.json({ status: "ok 🐸" });
+  res.json({ status: "ok", provider: "openai" });
 });
 
-// =======================
-// CHAT
-// =======================
+/* ---------- CHAT ENDPOINT ---------- */
 app.post("/chat", async (req, res) => {
+  const { message, provider } = req.body;
+
+  // Gemini temporarily disabled
+  if (provider === "gemini") {
+    return res.json({
+      reply: "🐸 Gemini coming soon. Using OpenAI for now."
+    });
+  }
+
   try {
-    const { message, provider } = req.body;
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You are CloudFroge, a friendly AI assistant." },
+        { role: "user", content: message }
+      ]
+    });
 
-    if (!message) {
-      return res.json({ reply: "❌ Empty message" });
-    }
-
-    if (provider === "gemini") {
-      // ✅ THIS is the correct call
-      const result = await model.generateContent(message);
-      const response = await result.response;
-      const text = response.text();
-
-      return res.json({ reply: text });
-    }
-
-    return res.json({ reply: "🚧 OpenAI coming soon" });
-  } catch (err) {
-    console.error("Gemini crash:", err);
     res.json({
-      reply: "🐸 Gemini error. Model invocation failed."
+      reply: completion.choices[0].message.content
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      reply: "🐸 OpenAI error. Check API key or quota."
     });
   }
 });
 
-// =======================
-// FRONTEND FALLBACK
-// =======================
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-// =======================
+/* ---------- START SERVER ---------- */
 app.listen(PORT, () => {
-  console.log(`🐸 CloudFroge running on ${PORT}`);
+  console.log(`🐸 CloudFroge running on port ${PORT}`);
 });
