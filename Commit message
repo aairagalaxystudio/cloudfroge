@@ -1,5 +1,5 @@
-feat: finalize frontend chat logic and project documentation
+fix: force OpenAI backend while Gemini is unavailable
 
-- Add production-ready app.js with chat bubbles
-- Improve error handling and provider support
-- Add professional README for portfolio use
+- Prevent provider mismatch
+- Ensure stable chat responses
+- Prepare UI for Gemini coming soon
