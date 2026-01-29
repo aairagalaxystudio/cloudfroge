@@ -1,15 +1,27 @@
-async function sendMessage() {
-  const message = document.getElementById("message").value;
-  const provider = document.getElementById("provider").value;
-  const output = document.getElementById("output");
+const sendBtn = document.getElementById("sendBtn");
+const promptInput = document.getElementById("prompt");
+const responseBox = document.getElementById("response");
+const providerSelect = document.getElementById("provider");
 
-  const res = await fetch("/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message, provider })
-  });
+sendBtn.onclick = async () => {
+  const message = promptInput.value.trim();
+  if (!message) return;
 
-  const data = await res.json();
+  responseBox.textContent = "Thinking...";
 
-  output.innerText = data.reply; // ✅ NOT undefined now
-}
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        provider: providerSelect.value
+      })
+    });
+
+    const data = await res.json();
+    responseBox.textContent = data.reply || "No response";
+  } catch (err) {
+    responseBox.textContent = "Server error";
+  }
+};
