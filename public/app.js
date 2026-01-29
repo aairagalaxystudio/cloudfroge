@@ -1,33 +1,21 @@
-const sendBtn = document.getElementById("sendBtn");
-const promptInput = document.getElementById("prompt");
-const chatBox = document.getElementById("response");
+const input = document.getElementById("input");
+const sendBtn = document.getElementById("send");
+const chat = document.getElementById("chat");
 const providerSelect = document.getElementById("provider");
 
-function addBubble(text, type) {
-  const bubble = document.createElement("div");
-  bubble.className = `bubble ${type}`;
-  bubble.textContent = text;
-  chatBox.appendChild(bubble);
-  chatBox.scrollTop = chatBox.scrollHeight;
-  return bubble;
-}
-
 sendBtn.onclick = async () => {
-  const message = promptInput.value.trim();
+  const message = input.value.trim();
   if (!message) return;
 
   addBubble(message, "user");
-  promptInput.value = "";
+  input.value = "";
 
-  const aiBubble = addBubble("", "ai");
+  const bubble = addBubble("", "bot");
   const cursor = document.createElement("span");
   cursor.className = "cursor";
-  cursor.textContent = "▍";
-  aiBubble.appendChild(cursor);
+  bubble.appendChild(cursor);
 
-  sendBtn.disabled = true;
-
-  const res = await fetch("/chat-stream", {
+  const response = await fetch("/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -36,15 +24,25 @@ sendBtn.onclick = async () => {
     })
   });
 
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder("utf-8");
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
 
   while (true) {
-    const { value, done } = await reader.read();
+    const { done, value } = await reader.read();
     if (done) break;
-    cursor.before(decoder.decode(value));
+
+    bubble.textContent += decoder.decode(value);
+    bubble.appendChild(cursor);
   }
 
   cursor.remove();
-  sendBtn.disabled = false;
 };
+
+function addBubble(text, type) {
+  const div = document.createElement("div");
+  div.className = `bubble ${type}`;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
