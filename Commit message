@@ -1,2 +1,6 @@
-"fix: upgrade Gemini SDK and stabilize server runtime"
-"feat(ui): implement chat bubble interface with Gemini response rendering"
+feat: switch backend to OpenAI (Gemini temporarily disabled)
+
+- Activate OpenAI chat completion backend
+- Keep Gemini UI selector (coming soon)
+- Stable /chat endpoint for production
+- Render-ready configuration
