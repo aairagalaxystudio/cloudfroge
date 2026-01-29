@@ -1,7 +1,7 @@
-const sendBtn = document.getElementById("sendBtn");
-const input = document.getElementById("messageInput");
+const form = document.getElementById("chat-form");
+const input = document.getElementById("message");
 const providerSelect = document.getElementById("provider");
-const chatBox = document.getElementById("chatBox");
+const chatBox = document.getElementById("chat-box");
 
 function addBubble(text, type = "bot") {
   const bubble = document.createElement("div");
@@ -11,12 +11,9 @@ function addBubble(text, type = "bot") {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-sendBtn.addEventListener("click", sendMessage);
-input.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") sendMessage();
-});
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-async function sendMessage() {
   const message = input.value.trim();
   if (!message) return;
 
@@ -26,29 +23,28 @@ async function sendMessage() {
   addBubble(message, "user");
   input.value = "";
 
-  // Typing bubble
-  const typingBubble = document.createElement("div");
-  typingBubble.className = "bubble bot typing";
-  typingBubble.innerText = "CloudFroge is thinking...";
-  chatBox.appendChild(typingBubble);
+  // Temporary thinking bubble
+  const thinkingBubble = document.createElement("div");
+  thinkingBubble.className = "bubble bot";
+  thinkingBubble.innerText = "🐸 CloudFroge is thinking...";
+  chatBox.appendChild(thinkingBubble);
   chatBox.scrollTop = chatBox.scrollHeight;
 
   try {
     const res = await fetch("/chat", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({ message, provider })
     });
 
     const data = await res.json();
+    thinkingBubble.remove();
 
-    typingBubble.remove();
-
-    // Gemini reply bubble
-    addBubble(data.reply || "⚠️ No reply from AI", "bot");
-
+    addBubble(data.reply || "🐸 No response", "bot");
   } catch (err) {
-    typingBubble.remove();
-    addBubble("❌ Server error. Check backend.", "bot");
+    thinkingBubble.remove();
+    addBubble("🐸 Network error. Try again.", "bot");
   }
-}
+});
