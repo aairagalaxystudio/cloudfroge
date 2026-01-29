@@ -6,24 +6,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
+  <div class="page">
+    <div class="card">
 
-<div class="container">
-  <div class="logo">🐸</div>
-  <h1>CloudFrog</h1>
-  <p>Cloud-native Multi-AI Assistant</p>
+      <!-- Frog Logo Animation -->
+      <div class="logo-wrap">
+        <div class="frog">🐸</div>
+      </div>
 
-  <select id="provider">
-    <option value="openai">OpenAI</option>
-    <option disabled>Gemini (soon)</option>
-  </select>
+      <h1>CloudFrog</h1>
+      <p class="subtitle">Cloud-native AI Assistant</p>
 
-  <input id="input" placeholder="Ask CloudFrog..." />
-  <button id="send">Send</button>
+      <!-- Provider (OpenAI active) -->
+      <select id="provider">
+        <option value="openai">OpenAI</option>
+        <option disabled>Gemini (soon)</option>
+      </select>
 
-  <div id="chat"></div>
-</div>
+      <!-- Chat Area -->
+      <div id="chat"></div>
 
-<script src="app.js"></script>
+      <!-- Input -->
+      <input
+        id="input"
+        type="text"
+        placeholder="Ask CloudFrog..."
+        autocomplete="off"
+      />
+      <button id="send">Send</button>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
