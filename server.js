@@ -93,4 +93,4 @@ app.get("*", (req, res) => {
 /* ---------- START SERVER ---------- */
 app.listen(PORT, () => {
   console.log(`🐸 CloudFroge running on port ${PORT}`);
-});
+}); 
