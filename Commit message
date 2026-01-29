@@ -1,3 +1,4 @@
+feat: finalize CloudFrog landing page and chat UI
 docs: update README to reflect OpenAI-only backend
 fix: force OpenAI backend while Gemini is unavailable
 
